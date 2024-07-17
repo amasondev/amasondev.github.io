@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Simple Allocator Pattern for C - alexmason.ca</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+<h1>Simple Allocator Pattern for C</h1>
+<div class="date">Nov 25 2023</div>
+
+<p>When I first made the switch from C# to C++, I was excited to be diving into the world of handling my own memory (I'll forgo the rant about C# memory management and garbage collection). The transition was a feeling of being simultaneously unshackled and lost. A wide world of possibility. Think: exiting the vault in Fallout 3.</p>
+<p>The main thing I wanted to do was easily change where newly allocated memory came from for a given procedure or data structure. For example, a dynamic array. In my game projects, I'm mostly just using Arenas. Refer to <a target="_blank" href="https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator">Ryan Fleury's excellent article on Arenas for memory management</a>.</p>
+<p>But I didn't want to have every function take an Arena pointer in its parameters and pass it down the call stack all the time. Also, what if I don't want to use an Arena, but maybe just the system heap? What if I have some other allocator I want to implement?</p>
+<img src="img/1404957533459.jpg" alt="I understand your frustration.">
+<p>I made some attempts of my own; abusing preprocessor macros and templates, but I found a much more elegant solution to this problem in Jonathan Blow's jai language. He defines an Allocator as a struct with just two fields: a function pointer and a data pointer. The function does all the different allocation operations you might want to do, alloc realloc free etc, and just switches on an enum to decide which to do.</p>
+<p>I went ahead and adopted this pattern in my codebase and have been happy with the results. While jai does some smart things with an implicit context with regards to allocation, mine just lets me assign an allocator to a data structure or pass it as an argument. Here's an example:</p>
+<code id="usage">List list = make_list(sizeof(int64)); <code-comment>// just sets the element_size</code-comment>
+list.allocator = temporary_allocator; <code-comment>// allocate to temp storage</code-comment>
+*(int64*)add(&list) = 10;
+*(int64*)add(&list) = 15;
+*(int64*)add(&list) = 20;
+*(int64*)add(&list) = 25;
+*(int64*)add(&list) = 30;
+
+do_something_with_the_list(&list);
+reset_temporary_storage();
+
+list = make_list(sizeof(char));
+list.allocator = system_allocator; <code-comment>// allocate to system heap</code-comment>
+*(char*)add(&list) = 'c';
+*(char*)add(&list) = 'o';
+*(char*)add(&list) = 'o';
+*(char*)add(&list) = 'l';
+
+do_something_with_the_list(&list);
+reset(&list); <code-comment>// free the memory</code-comment>
+</code>
+
+<p>Pretty convenient right? The List is just a dynamic array that maintains contiguous memory but forgoes pointer stability. Passing it an allocator lets you decide where it's getting that memory when it resizes.</p>
+
+<p>Here's how the allocator is implemented:</p>
+
+<code id="implement">struct Allocation_Parameters {
+    enum Mode {
+        ALLOC,
+        REALLOC,
+        FREE
+    };
+
+    Mode mode;
+    void *ptr = nullptr;
+    size_t request = 0;
+    size_t original_size = 0;
+    void *heap_data = nullptr;
+};
+
+typedef void*(*allocation_function)(Allocation_Parameters);
+
+struct Allocator {
+    allocation_function fn;
+    void *heap_data;
+};
+
+void *system_allocation(Allocation_Parameters p) {
+    <code-comment>// wraps VirtualAlloc, VirtualFree, malloc, free, etc.</code-comment>
+    switch(p.mode) {
+        case Allocation_Parameters::ALLOC: {
+            return platform_alloc(p.request);
+        } break;
+
+        case Allocation_Parameters::REALLOC: {
+            return platform_realloc(p.ptr, p.original_size, p.request);
+        } break;
+
+        case Allocation_Parameters::FREE: {
+            platform_free(p.ptr);
+            return nullptr;
+        } break;
+    }
+    return nullptr;
+}
+
+void *arena_allocation(Allocation_Parameters p) {
+    Arena *arena = (Arena*)p.heap_data;
+    switch(p.mode) {
+        case Allocation_Parameters::ALLOC: {
+            return arena_alloc(arena, p.request);
+        } break;
+
+        case Allocation_Parameters::REALLOC: {
+            return arena_realloc(arena, p.ptr, p.original_size, p.request);
+        } break;
+
+        case Allocation_Parameters::FREE: {
+            <code-comment>// noop - free is not supported in arenas</code-comment>
+            return nullptr;
+        } break;
+    }
+    return nullptr;
+}
+</code>
+
+<p>While Jon uses a function with all of the parameters right in the prototype, I went for a parameters struct which allows me to more easily extend it (I added alignment, for example).</p>
+
+<p>Now you just have to use it. Here's what the List's resize function might look like:</p>
+
+<code id="calling"><code-comment>// convenience function, just fills the parameter struct</code-comment>
+void *realloc(
+    Allocator allocator,
+    void* ptr,
+    size_t original_size,
+    size_t new_size)
+{
+    Allocation_Parameters p;
+    p.mode = Allocation_Parameters::REALLOC;
+    p.original_size = original_size;
+    p.request = new_size;
+    p.ptr = ptr;
+    p.heap_data = allocator.heap_data;
+    return allocator.fn(p);
+}
+
+void resize(List* list, int64 new_size) {
+    if (list->buffer.length >= new_size * list->element_size) return;
+
+    void *new_buffer = realloc(
+        list->allocator,
+        list->buffer.data,
+        list->element_size * list->count,
+        list->element_size * new_size);
+    assert(new_buffer);
+    list->buffer.data   = (byte*)new_buffer;
+    list->buffer.length = new_size * list->element_size;
+}
+</code>
+
+<footer>Notice any errors? Something unclear? <a href="mailto:feedback@alexmason.ca?subject=allocators.html">Let me know.</a>
+</footer>
+</body>
+</html>

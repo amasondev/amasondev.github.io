@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Undo with Arenas - alexmason.ca</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+<h1>Undo with Arenas</h1>
+<div class="date">Feb 10 2024</div>
+
+<p>If you're using arenas for memory management, here's a way to implement an undo system that you can write once and pretty much never have to touch again as you add features. I wrote this for a game level editor, but you can apply the technique to any user-facing program.</p>
+<p>The concept is straightforward. Each action the user takes performs a transformation on data. All we need to do is remember what changed and we can reverse it, un-reverse it, etc. With other memory management strategies, this may not be easy to accomplish since tracking where the data is in memory becomes complex. Since arenas are just one big contiguous buffer underneath, it's trivial to generate a diff between two points in time. You can track changes to multiple arenas too - either by keeping a pointer to the relevant arena, or in the following example just tracking them directly in the <code>Undo_State</code>.</p>
+<p>First, you need to generate diffs. I keep a second copy of each arena for which we want to track undos. If doing this is too great a memory cost for you, you might want to explore a more specialized way of creating diffs.</p>
+<p>For the level editor, I had two arenas I need to track. One for the level itself, and one for the current room being edited. There was no need to track outside rooms, since the user can only edit one room at a time. The structs look something like this:</p>
+<code id="arenas">struct Room {
+  Arena arena;
+};
+
+struct {
+  Arena arena;
+  Room  *rooms;
+  int   num_rooms;
+} level;
+
+struct Undo_State {
+  char *description;
+  <code-comment>// For brevity, assume an array implementation.</code-comment>
+  Array_Diff room_diffs;
+  Array_Diff level_diffs;
+  <code-comment>// We need to track the sizes of the Arenas as well.</code-comment>
+  size_t     room_arena_offset;
+  size_t     level_arena_offset;
+};
+</code>
+<p>The level editor follows with holding snapshots of the relevant arenas:</p>
+<code id="snapshots">struct {
+  Arena room_undo_snapshot;
+  Arena level_undo_snapshot;
+  <code-comment>// ...</code-comment>
+  int current_room;
+  <code-comment>// Assume we have a circular buffer implementation. It's not important for this example.</code-comment>
+  Circular_Undo_Buffer undo_states;
+} level_editor;
+</code>
+<p>You only need to synchronize the arenas (outside of initialization) <em>after</em> recording a diff. This means you can batch together multiple operations into a single undo.</p>
+<code id="push-undo">void move_objects() {
+  move_object(object_a);
+  move_object(object_b);
+  push_undo("Move objects"); <code-comment>// When undone, this will undo both the moves</code-comment>
+}
+
+void push_undo(char *description) {
+  <code-comment>// If an undo is pushed after some undos have occurred, we clear the following undo states.</code-comment>
+  level_editor.undo_states.count = level_editor.undo_index;
+
+  Undo_state *state = circular_push_new(&amp;level_editor.undo_states);
+  state-&gt;description = description;
+  state-&gt;level_diffs = {0};
+  state-&gt;room_diffs  = {0};
+
+  <code-comment>// Get the diffs for each arena and store them in the undo state.</code-comment>
+  Arena room_arena = level.rooms[level_editor.current_room].arena;
+  get_diffs(
+    level_editor.room_undo_snapshot.buffer,
+    room_arena.buffer,
+    room_arena.size,
+    &amp;state-&gt;room_diffs);
+  state-&gt;room_arena_offset = room_arena.offset;
+  get_diffs(
+    level_editor.level_undo_snapshot.buffer,
+    level.arena.buffer,
+    level.arena.size,
+    &amp;state-&gt;level_diffs);
+  state-&gt;level_arena_offset = level_arena.offset;
+  <code-comment>// Note: You can also record diffs on a struct or any arbitrary block of data here.</code-comment>
+  
+  update_undo_snapshots(); <code-comment>// After we have the diffs, we can synchronize the snapshot arenas.</code-comment>
+  level_editor.undo_index = level_editor.undo_states.count;
+}
+
+void update_undo_snapshots() {
+  Arena room_arena = level.rooms[level_editor.current_room].arena;
+  memcpy(
+    level_editor.room_undo_snapshot.buffer,
+    room_arena.buffer,
+    room_arena.offset);
+  level_editor.room_undo_snapshot.offset = room_arena.offset;
+  memcpy(
+    level_editor.level_undo_snapshot.buffer,
+    level.arena.buffer,
+    level.arena.offset);
+  level_editor.level_undo_snapshot.offset = level.arena.offset;
+}
+</code>
+<p>That's all you need to push undo states. No need to write bespoke undo code for each operation in the program. Let's take a look at <code>get_diffs</code>:</p>
+<code>struct Diff {
+  uintptr_t offset;
+  uint64    xor_value;
+};
+
+<code-comment>// returns the byte offset of the first difference, -1 if no different
+// works in 64 bit chunks</code-comment>
+uintptr_t compare_memory(void *a, void *b, size_t size) {
+  uintptr_t pa = reinterpret_cast&lt;uintptr_t&gt;(a);
+  uintptr_t pb = reinterpret_cast&lt;uintptr_t&gt;(b);
+  for(uintptr_t offset = 0; offset &lt; size; offset += sizeof(uintptr_t)) {
+    uint64 *ua = reinterpret_cast&lt;uint64*&gt;(pa + offset);
+    uint64 *ub = reinterpret_cast&lt;uint64*&gt;(pb + offset);
+    if (*ua != *ub) {
+      return offset;
+    }
+  }
+  return -1;
+}
+
+void get_diffs(void *a, void *b, size_t size, Array_Diff *diffs) {
+  uintptr_t pa = reinterpret_cast&lt;uintptr_t&gt;(a);
+  uintptr_t pb = reinterpret_cast&lt;uintptr_t&gt;(b);
+  uintptr_t offset = 0;
+  while(offset &lt; size) {
+    uint64 *ua = reinterpret_cast&lt;uint64*&gt;(pa + offset);
+    uint64 *ub = reinterpret_cast&lt;uint64*&gt;(pb + offset);
+    uintptr_t this_offset = compare_memory(ua, ub, size - offset);
+    if (this_offset != -1) {
+      offset += this_offset;
+      ua = reinterpret_cast&lt;uint64*&gt;(pa + offset);
+      ub = reinterpret_cast&lt;uint64*&gt;(pb + offset);
+      Diff d = {};
+      d.offset = offset;
+      d.xor_val = *ua ^ *ub;
+      diffs-&gt;data[diffs-&gt;count++] = d;
+
+      offset += sizeof(uintptr_t);
+    } else {
+      break;
+    }
+  }
+}</code>
+
+<p>Each <code>Diff</code> is on a 8 byte block. You could optimize this with SIMD at the cost of keeping larger diffs in memory, but the more clever option would be to generate an XOR of the entire buffer and compress the result.</p>
+
+<p>Now that you have your diffs, all you need to do is apply the diffs when the user calls undo and redo.</p>
+
+<code>void editor_undo() {
+  Undo_state *undo = circular_peek(level_editor.undo_states, level_editor.undo_index - 1);
+  if (undo) {
+    --level_editor.undo_index;
+
+    Arena *room_arena = &amp;level.rooms[level_editor.current_room].arena;
+    apply_diffs(
+      room_arena-&gt;buffer,
+      undo-&gt;room_arena_offset,
+      undo-&gt;room_arena_diffs);
+    room_arena-&gt;offset = undo-&gt;arena_offset;
+
+    apply_diffs(
+      level.arena.buffer,
+      undo-&gt;level_arena_offset,
+      undo-&gt;level_arena_diffs);
+    level.arena.offset = undo-&gt;arena_offset;
+
+    update_undo_snapshots();
+  }
+}
+
+void editor_redo() {
+  if (level_editor.undo_index &lt; level_editor.undo_states.count) {
+    Undo_state *redo = circular_peek(room_editor.undo_states, room_editor.undo_index);
+    if (redo) {
+      ++level_editor.undo_index;
+
+      Arena *room_arena = &amp;level.rooms[level_editor.current_room].arena;
+      apply_diffs(
+        room_arena-&gt;buffer,
+        redo-&gt;room_arena_offset,
+        redo-&gt;room_arena_diffs);
+      room_arena-&gt;offset = redo-&gt;arena_offset;
+
+      apply_diffs(
+        level.arena.buffer,
+        redo-&gt;level_arena_offset,
+        redo-&gt;level_arena_diffs);
+      level.arena.offset = redo-&gt;arena_offset;
+
+      update_undo_snapshots();
+    }
+  }
+}
+
+void apply_diffs(void *destination, size_t size, Array_Diff diffs, bool invert = false) {
+  uintptr_t pdest = reinterpret_cast&lt;uintptr_t&gt;(destination);
+  for(int i = 0; i &lt; diffs.count; ++i) {
+    uintptr_t offset = diffs.data[i].offset;
+    assert(offset &lt; size);
+    uint64 xor_val = diffs[i].xor_val;
+    if (invert) xor_val = ~xor_val;
+    uint64 *ptr = reinterpret_cast&lt;uint64*&gt;(pdest + offset);
+    *ptr ^= xor_val;
+  }
+}
+</code>
+
+<footer>Notice any errors? Something unclear? <a href="mailto:feedback@alexmason.ca?subject=arena-undo.html">Let me know.</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Odyssey Virtual - alexmason.ca</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+<meta name="date" content="2019-03-28">
+
+</head>
+
+<body>
+<header>
+<h1>Odyssey Virtual</h1>
+<figure>
+<video src="video/odyssey-trailer.mp4" height="720" width="1280" controls preload="metadata" poster="img/odyssey/odyssey.jpg"></video>
+</figure>
+<p>Imagine exploring an ancient unreleased virtual reality simulation from the 1990's. What secrets would it hold? Odyssey Virtual is a computer game in ongoing development that explores this concept. Set in the vaporware creation of an obscure dot-com bubble company, players unravel its mysteries through puzzle-platforming gameplay and environment-based storytelling.</p>
+<p>My role in this project has involved everything from programming to animation to narrative, gameplay, and sound design. This article will focus on the gameplay design and programming aspects.</p>
+</header>
+<nav class="toc" aria-label="Table of Contents">
+<h2>Contents</h2>
+<ol>
+<li><a class="navlink" href="#concept">Concept</a></li>
+<li><a class="navlink" href="#firstproject">The First Project</a></li>
+<li><a class="navlink" href="#secondproject">Second Iteration and VR</a></li>
+<li><a class="navlink" href="#gallery">Gallery</a></li>
+</ol>
+</nav>
+
+<section id="concept">
+<h2>Concept</h2>
+<p>My goal in developing Odyssey Virtual is to create an immersive and plausible narrative world. When the player plays this game, they aren't stepping into the role of a fictional character. They play themselves, and their motivations and goals are no different. It made sense, then, to match the narrative world with reality. In reality, the player downloads and installs a game and plays it, usually out of curiosity for what experiences lie in that game. The setting should be a game world, or a virtual world of some kind.</p>
+<figure>
+<a href="img/odyssey/worlds.jpg">
+<img src="img/odyssey/worlds.jpg" alt="Screenshot of Worlds.com">
+</a>
+<figcaption>The strange, still functioning world of Worlds.com</figcaption>
+</figure>
+<p>Inspired by the new music phenomenon "Vaporwave", as well as my own experiences exploring an old virtual chatroom called <a href="https://web.archive.org/web/20181206042930/http://archive.worlds.com/" target="_blank">Worlds.com</a>, I started to develop the concept.</p>
+<figure>
+<img src="img/odyssey/vaporwave.jpg" alt="Image of a statue hand releasing computer windows.">
+<figcaption>Vaporwave combined aesthetics of early computer art with heavily manipulated sample music.</figcaption>
+</figure>
+<p>I began by testing post-process color <abbr title="Lookup Tables">LUTs</abbr> in Unreal Engine 4 to try to nail a look. I wanted to see if it was possible to achieve a VHS quality, inspired by films such as <a href="https://ia801901.us.archive.org/27/items/the-minds-eye-1990-laserdisc/The%20Mind%27s%20Eye%20%281990%29%20%28Laserdisc%29.ia.mp4" target="_blank">The Mind's Eye (1990)</a>. Eventually, I migrated the project to Unity and began to write shaders - exploring the possibility of recreating the look of old pre-rendered CGI in realtime.</p>
+<figure>
+<a href="img/odyssey/ue4-test.png">
+<img src="img/odyssey/ue4-test.png" alt="A screenshot of a series of columns and geometric shapes">
+</a>
+<figcaption>Exploration of shapes and colors.</figcaption>
+</figure>
+<p>Eventually, I wanted to develop a way to distort the player's sense of space. In virtual reality, perhaps a doorway of a small building would lead to a much larger interior space. One of the aspects I love most about game development is the fakery and trickery behind the scenes, like a great magic trick or special effect. I programmed a portal system which would allow me to link spaces in this way.</p>
+<figure>
+<img src="img/odyssey/portal1.gif" alt="An animated GIF of a portal effect.">
+<figcaption>A portal effect, which toys with they player's sense of space by producing non-Euclidean geometry.</figcaption>
+</figure>
+</section>
+
+<section id="firstproject">
+<h2>The First Project</h2>
+<figure>
+<img src="img/odyssey/project1-puzzle.jpg" alt="Screenshot of a puzzle in the first project.">
+<figcaption>The first project presented simple physics puzzles solved by manipulating and duplicating objects.</figcaption>
+</figure>
+<p>For the class <abbr title="Advanced Game Design">IAT-410</abbr>, my group went with my pitch to do a small scale version of Odyssey Virtual as a puzzle platformer.</p>
+<blockquote class="credits">Credits:
+<ul>
+<li>Alex Mason - Programming and Gameplay Design, Trailer</li>
+<li>Mark Wakeham - Puzzle Design</li>
+<li>Dylan McIntyre - Art and Puzzle Design</li>
+<li>Gillian Ramsay - Additional Modeling</li>
+</ul>
+</blockquote>
+<p>In this project I explored and implemented various game interactions, such as the ability for players to copy-and-paste objects. We looked at ways to translate familiar computer tools to gameplay elements. While this approach fit the theme, it didn't hit the gameplay mark we had hoped. Players did not find the process of pressing ctrl+c ctrl+v engaging or interesting &ndash; it essentially amounted to an unintuitive way to clone objects.</p>
+<p>Our design pivoted towards a more traditional puzzle-platformer while maintaining the world and theme. During this phase, I still wanted to bring some kind of novel aspects that sold this world as an old virtual reality. I implemented a fully working SMTP email client as a building players could visit in the game. Floating windows allowed the entry of authentication information and email content. While this had no gameplay impact, play testers responded positively. Bridging the gap between game and software turned out to be an interesting direction worth exploring further.</p>
+<figure>
+<img src="img/odyssey/project1-ui.jpg" alt="Screenshot of the floating window system in the first project.">
+<figcaption>Floating windows in the world would expand and iconify.</figcaption>
+</figure>
+</section>
+
+<section id="secondproject">
+<h2>Second Iteration and VR</h2>
+<figure>
+<video src="video/portal-physics1.mp4" width="798" height="598" muted autoplay loop></video>
+<figcaption>Demonstration of portal physics with gravity alteration.</figcaption>
+</figure>
+<p>Currently under development for <abbr title="Immersive Environments">IAT-445</abbr>, my group wanted to utilize my work with portals to create a VR puzzle game. This iteration focuses on unique gameplay elements of portals such as using them to scale objects and the player up and down, and bending the laws of gravity.</p>
+<blockquote class="credits">Credits:
+<ul>
+<li>Alex Mason - Programming, Gameplay Design, Level Design</li>
+<li>Emily Johnston - Puzzle and Level Design</li>
+<li>Patrick Klosowski - Modeling and Animation</li>
+<li>Averi Balleza - Modeling, Texturing and Set Dressing</li>
+</ul>
+</blockquote>
+<p>This project is designed to work with the Oculus Rift VR Headset, and as such needed to be developed from the ground-up. Portals, which utilized a RenderTexture, now needed to be rendered for each eye, and required a significant rewrite. Portals also needed to be easily rotated and scaled up and down to allow for this new gameplay. With some matrix manipulation, I now have portals that the level designers can simply place in the level, and scale up and down as needed.</p>
+<figure>
+<video src="video/portal-physics2.mp4" width="1240" height="568" muted autoplay loop></video>
+<figcaption>Demonstration of portal physics with scale alteration.</figcaption>
+</figure>
+<p>When a portal doorway is linked to a portal which is sideways along the wall, the player and objects that pass through it will have their direction of gravity changed. The effect is as you would expect walking through any door.</p>
+<figure>
+<img src="img/odyssey/library.png" alt="Screenshot of a library with two portals and a chandelier.">
+<figcaption>A chandelier hangs from the ceiling viewable through the portal to help players discover the rules of portals.</figcaption>
+</figure>
+<p>I created a wrapper around Unity's physics to deal with the way gravity needed to work in this system. Each physics object has a gravity direction that can be modified by portals. This has the added advantage of being able to do all kinds of things with gravity, such as a small planet the player can walk around.</p>
+<figure>
+<video src="video/planet.mp4" width="720" height="319" muted autoplay loop></video>
+<figcaption>An example of a small planet with its own gravitational force.</figcaption>
+</figure>
+<p>With these systems in place, we are in the process of creating environments and challenges that bend the player's sense of space. After the completion of this project, I intend to fold all the things I've developed and learned into a full product.</p>
+<figure>
+<img src="img/odyssey/courtyard.png" alt="Screenshot of a courtyard.">
+<figcaption>A courtyard, one of the first areas seen by our players.</figcaption>
+</figure>
+</section>
+
+<section id="gallery">
+<h2>Gallery</h2>
+<div class="gallery">
+<figure>
+<img src="img/odyssey/luts-before.jpg" alt="Screenshot of a color test.">
+<img src="img/odyssey/luts-after.jpg" alt="Screenshot of a color test.">
+<figcaption>Early UE4 test of color filters using <abbr title="Lookup Tables">LUTs</abbr>.</figcaption>
+</figure>
+<figure>
+<a href="img/odyssey/specular-sunset.jpg">
+<img src="img/odyssey/specular-sunset.jpg" alt="Screenshot of a sunset.">
+</a>
+<figcaption>A procedural water shader. Designed to look repetitive to fit the early computer art aesthetic, yet also visually pleasing.</figcaption>
+</figure>
+<figure>
+<a href="http://odyssey-virtual.com/" target="_blank">
+<img src="img/odyssey/website.png" alt="Screenshot of an old-looking website.">
+</a>
+<figcaption>A satellite project for an interactive narrative class, I created a website for the fictional company responsible for Odyssey. Story elements are hidden in the website's source code. <strong>(Warning: website produces sound.)</strong></figcaption>
+</figure>
+</div>
+</section>
+
+</body>
+
+</html>

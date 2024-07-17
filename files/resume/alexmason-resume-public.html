@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<!-- Please open this file in your browser, e.g. Google Chrome, Safari, Firefox -->
+
+<!-- ALEX MASON RESUME -->
+
+
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style>
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0 auto;
+      width: 8in;
+      font-family: 'New York', 'Georgia', serif;
+      font-size: 11pt;
+    }
+
+    h1 {
+      font-family: 'Didot', 'Cambria', serif;
+      font-size: 46px;
+      font-weight: 200;
+      text-align: center;
+      margin: 0.2em 0;
+    }
+
+    h2 {
+      margin: 0.3em 0 0.3em 0;
+      border-style: solid;
+      border-width: 0 0 1px 0;
+      border-color: lightgray;
+    }
+
+    h3 {
+      font-weight: normal;
+      margin: 1.3em 0 0.4em 0;
+    }
+
+    p {
+      /*text-align: justify;*/
+      word-break: keep-all;
+      margin: 0.5em 0 1em 0;
+      line-height: 1.3rem;
+    }
+
+    abbr {
+      text-decoration: underline;
+    }
+
+    #contact {
+      margin: 0.5em 0 1em 0;
+    }
+
+    .contact-info {
+      text-align: left;
+      list-style: none;
+      margin: 0 auto;
+      width: fit-content;
+      font-size: 10pt;
+    }
+
+    .skills-list {
+      display: flex;
+      justify-content: left;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-content: flex-end;
+      margin: 0 0 1em 1em;
+    }
+
+    .skills-list li:nth-child(odd) {
+      width: 50%;
+    }
+
+    ul, ol {
+      margin: 0 0 0 0;
+      list-style-type: circle;
+      padding-inline-start: 0;
+    }
+
+    li {
+      margin-left: 1em;
+      padding: 2px 0;
+    }
+
+    .work li {
+      line-height: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .work {
+      /* font-size: 1.1em; */
+      margin: 1em;
+    }
+
+    .work-title {
+      font-weight: bold;
+      font-size: 1em;
+    }
+
+    .work-date {
+      float: right;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .clearfix {
+      clear: both;
+    }
+
+    section {
+        margin: 0 0 1em 0;
+    }
+
+    summary {
+      cursor: pointer;
+      border-style: outset;
+      border-color: lightgray;
+      padding: 0.3em;
+      background: lightgray;
+    }
+
+    summary:hover {
+        background: #eeeeee;
+    }
+
+    details summary > h2,
+    h3,
+    details summary > p
+    {
+        display:inline;
+    }
+
+    details p {
+        margin: 0;
+    }
+
+    details > div {
+        background: white;
+        padding: 0.5em 1em 0.5em 1em;
+        border-style: none inset inset inset;
+        border-color: #eeeeee;
+    }
+
+    /*
+    details:not([open]) {
+      border-bottom: 1px solid lightgray;
+    }
+    */
+
+    hr {
+      margin: 2em 0;
+    }
+
+    #projects {
+      display: none;
+    }
+
+    @media print {
+      body {
+          width: unset;
+      }
+      hr {
+        display: none;
+      }
+      abbr {
+        text-decoration: none;
+      }
+
+      .webonly {
+          display: none;
+      }
+
+      #education,#projects,#skills,div.work {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:cc='http://creativecommons.org/ns%23' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns%23' xmlns:svg='http://www.w3.org/2000/svg' xmlns='http://www.w3.org/2000/svg' width='82.876335' height='182.61754' viewBox='0 0 21.927697 48.31758' version='1.1' id='svg8'%3E%3Cdefs id='defs2' /%3E%3Cmetadata id='metadata5'%3E%3Crdf:RDF%3E%3Ccc:Work rdf:about=''%3E%3Cdc:format%3Eimage/svg+xml%3C/dc:format%3E%3Cdc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage' /%3E%3Cdc:title%3E%3C/dc:title%3E%3C/cc:Work%3E%3C/rdf:RDF%3E%3C/metadata%3E%3Cg style='fill:%238686bf;fill-opacity:1' id='g3910'%3E%3Cpath points='21.927697,6.7237361 21.927697,40.619143 11.705016,33.895407 11.705016,-4.6227718e-08 ' d='M 11.705016,-4.6227718e-8 21.927697,6.7237361 V 40.619143 L 11.705016,33.895407 Z' style='fill:%23e9e9ff;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3900' /%3E%3Cpath points='-1.3476549e-09,41.593822 11.705016,33.895407 11.705016,-4.6227718e-08 -1.3476549e-09,7.6984145 ' d='M 0,7.6984145 V 41.593822 L 11.705016,33.895407 V -4.6227718e-8 Z' style='fill:%23353564;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3898' /%3E%3Cpath points='10.222682,48.317558 21.927697,40.619143 11.705016,33.895407 -1.3476549e-09,41.593822 ' d='M 0,41.593822 10.222682,48.317558 21.927697,40.619143 11.705016,33.895407 Z' style='fill:%23afafde;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3902' /%3E%3Cpath points='10.222682,14.422151 21.927697,6.7237361 11.705016,-4.6227718e-08 -1.3476549e-09,7.6984145 ' d='M 0,7.6984145 10.222682,14.422151 21.927697,6.7237361 11.705016,-4.6227718e-8 Z' style='fill:%234d4d9f;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3904' /%3E%3Cpath points='10.222682,48.317558 21.927697,40.619143 21.927697,6.7237361 10.222682,14.422151 ' d='M 10.222682,14.422151 V 48.317558 L 21.927697,40.619143 V 6.7237361 Z' style='fill:%23d7d7ff;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3906' /%3E%3Cpath points='10.222682,14.422151 10.222682,48.317558 -1.3476549e-09,41.593822 -1.3476549e-09,7.6984145 ' d='M 0,7.6984145 10.222682,14.422151 V 48.317558 L 0,41.593822 Z' style='fill:%238686bf;fill-rule:evenodd;stroke:none;stroke-width:0.83081;stroke-linejoin:round' id='path3908' /%3E%3C/g%3E%3Cg id='layer1' transform='translate(-1.8493011,-248.25619)' /%3E%3C/svg%3E">
+  <title>Alex Mason</title>
+</head>
+
+<body>
+
+  <h1 id="name">Alexander Mason</h1>
+  <section id="contact">
+    <ul class="contact-info">
+      <li><strong>email</strong>: <a href="mailto:alex@alexmason.ca">alex@alexmason.ca</a></li>
+    </ul>
+  </section>
+
+  <p>Professional game &amp; software programmer passionate about combining art and science to explore new and exciting creative endeavors.</p>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>I am a working software engineer dedicated to the art of computer game development. I have been obsessed with software from a young age, making my first games and animations at age 9. I am an intrinsic problem-solver, and I value simple and elegant solutions. I have a strong aesthetic for design. Data-oriented design advocate.
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <ul class="skills-list">
+      <li>C++, C, C#</li>
+	  <li>Metal, Direct3D, HLSL</li>
+      <li>Unity and Unreal Engine development</li>
+      <li>Realtime game networking</li>
+      <li>Xcode, iOS deployment</li>
+      <li>Perforce, SVN, Git version control systems</li>
+      <li>Linux server administration, Unix shell</li>
+      <li>PHP, SQL, Python, HTML</li>
+      <li>NGUI, WPF, .NET, and Android SDK</li>
+      <li>Autodesk &amp; Adobe software</li>
+      <!-- <li>Video editing and Desktop publishing software</li> -->
+    </ul>
+  </section>
+
+  <section id="workexp">
+    <h2>Work Experience</h2>
+    <p class="webonly">Click on headers to expand.</p>
+    <div class="work">
+      <details open>
+        <summary>
+          <h3 class="work-title">Kabam Inc. - Prototyping Engineer</h3><span class="work-date">November 2021 — May 2023</span>
+        </summary>
+        <div>
+        <p>Generalist working in small teams producing prototypes of new games and technology</p>
+        <ul>
+          <li>Collaborated as a generalist in small, agile teams on several prototype games.</li>
+          <li>Built tools, build pipelines, gameplay systems, UI.</li>
+          <li>Produced a self-pitched, functioning multiplatform networked survival game.</li>
+          <li>Made major contributions to core tech, including core packages, network libraries, and debug interfaces.</li>
+          <li>Shipped code rapidly under regular strict deadlines.</li>
+        </ul>
+        </div>
+      </details>
+    </div>
+    <div class="work">
+      <details open>
+        <summary>
+          <h3 class="work-title">Kabam Inc. - Frontend Engineer</h3><span class="work-date">June 2019 — November 2021</span>
+        </summary>
+        <div>
+        <p>Shipped <em>Marvel: Realm of Champions</em> as a member of the Frontend Engineering Team.</p>
+        <ul>
+          <li>Responsible for building key areas of the frontend, including Gameplay HUD, Store, Game Rewards, Alliances, Mode Select.</li>
+          <li>Collaborated closely with interdisciplinary teams to deliver a polished and responsive user interface.</li>
+          <li>Led initiatives to improve performance, code design, and processes.</li>
+          <li>Produced the winning entry for an internal game jam as part of a 5 member team.</li>
+          <li>Engaged in a pitch meeting with the strategic leadership team.</li>
+        </ul>
+        </div>
+      </details>
+    </div>
+    <div class="work">
+      <details>
+        <summary>
+          <h3 class="work-title">Apple Retail - Specialist and IS&amp;T Liaison</h3><span class="work-date">June 2011 — February 2013</span>
+        </summary>
+        <div>
+        <p>Hired as a retail specialist in 2011 out of a large selection of candidates, quickly joined the 'Visuals' group responsible for overnight product launches. Expanded role to support the Genius Bar team and maintain store IT as a liaison.</p>
+        <ul>
+          <li>Communicated technical concepts to customers and staff.</li>
+          <li>Diagnosed and repaired mobile devices for customers.</li>
+          <li>Ran in-store software workshops for customers.</li>
+          <li>Maintained late hours to ensure smooth product launches.</li>
+          <li>Provisioned Macintosh systems and wrote automation scripts.</li>
+        </ul>
+        </div>
+      </details>
+    </div>
+    <div class="work">
+      <details>
+        <summary>
+          <h3 class="work-title">Maker Studios - Content Creator (Contract)</h3><span class="work-date">July 2011 — July 2012</span>
+        </summary>
+        <div>
+        <p>Produced gaming-related videos as a YouTube partner under the <em>Polaris</em> and <em>TheGameStation</em> brands.</p>
+        <ul>
+          <li>Produced game-design related video-essays on a weekly basis.</li>
+          <li>Attended press room showings at <abbr title="Penny Arcade Expo">PAX</abbr> 2011 in Seattle, WA.</li>
+          <li>Generated 2.8 million video views and 10 thousand subscriptions.</li>
+        </ul>
+        </div>
+      </details>
+    </div>
+    <div class="work">
+      <details>
+        <summary>
+          <h3 class="work-title">Hothead Games - Game Tester (Contract)</h3><span class="work-date">October 2010</span>
+        </summary>
+        <div>
+        <p>Game-testing contract work for the Ron Gilbert Xbox Live Arcade title, <em>DeathSpank: Thongs of Virtue</em>.</p>
+        <ul>
+          <li>Tested and reported bugs and relayed gameplay experiences.</li>
+          <li>Met with designers to provide constructive feedback.</li>
+        </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="work">
+      <h3 class="work-title">Bachelor of Science</h3><span class="work-date">2019</span>
+      <div class="clearfix"></div>
+      <span>Interactive Art and Technology, Simon Fraser University</span>
+      <p>Developed full projects, including games, software for desktops, and apps for mobile devices.
+        Led multidisciplinary teams in rapid prototyping, iterative design, and design thinking. Strongly
+        focused studies on software development, game design theory, and user experience (UX).</p>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Personal Projects</h2>
+    <details>
+    <summary>
+    <p>For full portfolio, please visit: <a href="http://alexmason.ca" target="_blank">alexmason.ca</a></p>
+    </summary>
+    <div>
+    <a href="https://vdm.fun/~alex/post?p=odyssey" target="_blank">
+      <h3>Odyssey Virtual</h3>
+    </a>
+    <p>A virtual reality puzzle game featuring space-bending portals created in Unity. Odyssey Virtual tells the story of a fictional virtual reality created in the 1990's and never released to the public.</p>
+
+    <a href="https://vdm.fun/~alex/post?p=sketboard" target="_blank">
+      <h3>Sketboard</h3>
+    </a>
+    <p>A 48 hour game jam project for Unreal Engine's January Jam. Sketboard is a fully networked multiplayer skateboard simulator with over-the-top ragdoll physics and destructible objects. Created in Unreal Engine 4 using C++ and blueprints</p>
+
+    <a href="https://vdm.fun/~alex/post?p=sole" target="_blank">
+      <h3>SOLE</h3>
+    </a>
+    <p>"Souls of Luminous Eternity" is a fighting game conceptualized as a 2D fighting game with no walls. I worked with a team called Accel Games to develop a networked prototype in Unity.</p>
+
+    <a href="https://vdm.fun/~alex/post?p=answer" target="_blank">
+      <h3>Answer</h3>
+    </a>
+    <p>A mobile RPG centered around simple "yes" or "no" answers. I developed tools and encounter editor for the designer to rapidly build the gameplay within Unity.</p>
+
+    <a href="https://www.youtube.com/watch?v=xBC_ig73aMs" target="_blank">
+      <h3>Top 10 Reasons to be Interested in Guild Wars 2</h3>
+    </a>
+    <p>Popular video produced for Maker Studios.</p>
+
+    <a href="https://vdm.fun/~alex/post?p=passwordhasher" target="_blank">
+      <h3>PasswordHasher</h3>
+    </a>
+    <p>Password management utility that deterministically generates strong passwords.</p>
+    </div>
+    </details>
+  </section>
+
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: monospace;
+	font-size: 16px;
+	color: black;
+	background: aliceblue;
+	line-height: 1rem;
+	margin: 1rem auto;
+	
+	max-width: 80rem;
+    font-variant-ligatures: none !important;
+}
+
+section {
+	padding: 0;
+	margin: 2rem 0;
+}
+
+#description {
+	margin: 0 auto;
+}
+
+ol {
+    padding-inline-start: 1rem;
+}
+
+ul {
+	list-style-type: square;
+    padding-inline-start: 1rem;
+}
+
+li {
+	margin: 0.5rem 0;
+}
+
+nav ul {
+	list-style-type: none;
+}
+
+img,video,iframe {
+	display: block;
+	margin: 1rem 0;
+	border: 2px inset darkgray;
+	max-height: 500px;
+	max-width: 100%;
+}
+
+figure {
+	border: 2px outset darkgray;
+	margin: 1rem auto;
+	max-width: 100%;
+	background: ghostwhite;
+	display:table;
+}
+
+figure img, figure video, figure iframe {
+	display: block;
+	margin: 0;
+	border: none;
+	object-fit: cover;
+}
+
+figcaption {
+	padding: 0.5rem;
+	font-size: 0.8rem;
+	display: table-caption;
+	border: 2px outset gray;
+	border-top: none;
+	background: ghostwhite;
+	caption-side: bottom;
+}
+
+h1,h2 {
+	font-family: sans-serif;
+}
+
+h2 {
+    margin: 0.5rem 0;
+	font-size: 1.2rem;
+	font-weight: normal;
+}
+
+p {
+	margin: 0.8em 0;
+	width: 100%;
+	line-height: 1.3rem;
+	text-align: justify;
+}
+
+li p {
+	margin: 0.2rem 0;
+}
+
+code {
+	white-space: pre;
+	padding: 1rem;
+	border: 2px inset darkgray;
+	display: block;
+	width: 100%;
+	overflow: auto;
+	background: white;
+	line-height: 1.2rem;
+}
+
+code-comment {
+    color: green;
+}
+
+code a, code a:visited {
+    color: green;
+	text-decoration: underline;
+}
+
+p code {
+    display: inline;
+    padding: 1px;
+    border: 1px solid grey;
+}
+
+a,a:visited {
+	color: blue;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+footer {
+	font-size: 0.7rem;
+    margin-top: 3rem;
+}
+
+#toc {
+	font-size: 0.8rem;
+	line-height: 1.1rem;
+}
+#toc li, #toc h1, #toc ul {
+    margin: 0;
+    padding: 0;
+}
+
+.date {
+	margin: 0;
+	font-size: 0.7rem;
+}
+
+@media (prefers-color-scheme: dark) {
+	html {
+		color-scheme: dark;
+		background: black;
+		color: white;
+	}
+	
+	a,a:visited {
+		color: #FFBF00;
+	}
+    
+	code {
+		background: #0a0a0a;
+	}
+	
+    code-comment {
+        color: #00FF00;
+    }
+	
+	figure, figcaption {
+		background: #1a1a1a;
+	}
+}

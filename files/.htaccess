@@ -1,0 +1,15 @@
+Options +Indexes
+
+# STRONG HTACCESS PROTECTION
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+ order allow,deny
+ deny from all
+</Files>
+
+<IfModule mod_autoindex.c>
+
+  IndexStyleSheet /~alex/css/index.css
+  IndexOptions +Charset=UTF-8 +NameWidth=* +FancyIndexing +FoldersFirst +HTMLTable +IgnoreCase +IconsAreLinks +VersionSort +SuppressDescription
+  HeaderName /~alex/files-header.html
+
+</IfModule>

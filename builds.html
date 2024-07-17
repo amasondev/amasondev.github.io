@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build Script with PowerShell - alexmason.ca</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+<h1>Build Script with PowerShell</h1>
+<div class="date">May 15 2024</div>
+
+<p><code>build.bat</code></p>
+<code id="bat">@echo off
+where /q "cl.exe" || (
+    rem <code-comment>This is so stupid. Like why can't MS just make this a system environment variable...</code-comment>
+    call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
+)
+pushd %~dp0
+powershell.exe Set-ExecutionPolicy Bypass -Scope Process -Force; .\build.ps1 %*
+popd
+</code>
+<p><code>build.ps1</code></p>
+<code id="ps1">param(
+    [switch] $step = $False,
+    [switch] $debugRun = $False,
+    [switch] $run = $False,
+    [Parameter(ValueFromRemainingArguments)]
+    [string[]] $runArgs = @()
+)
+
+if (-Not (Get-Command "cl.exe" 2&gt; $null)) {
+    &amp;{Import-Module "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"; Enter-VsDevShell 2f3753d6 -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"}
+    if (-Not (Get-Command "cl.exe" 2&gt; $null)) {
+        throw "No cl.exe found. Please run this from the MSVC x64 native tools command prompt."
+    }
+}
+
+$PROGNAME = 'my_executable'
+$compileFiles = @(
+    'main.c'
+)
+$clFlags = @(
+    '/nologo',
+    '/W3',
+    '/WX',
+    '/Z7',
+    '/Zc:preprocessor',
+    '/GS-',
+    '/Gm-',
+    '/Gs999999',
+    '/I"..\stb"'
+)
+$linkFlags = @(
+    '/incremental:no',
+    '/opt:icf',
+    '/opt:ref',
+    '/ignore:4099',
+)
+
+if ($env:DEBUGGER) {
+    $debugger = $env:DEBUGGER
+} else {
+    $debugger = "..\..\raddebugger\build\raddbg.exe"
+}
+
+try {
+    Push-Location $PSScriptRoot
+    if (-Not (Test-Path "build")) {
+        New-Item -Name "build" -Type Directory &gt; $null
+    }
+
+    <code-comment># Convert paths to absolute paths</code-comment>
+    for($i = 0; $i -lt $compileFiles.Length; $i++) {
+        $f = $compileFiles[$i]
+        $compileFiles[$i] = Resolve-Path "src\$f"
+    }
+
+    Push-Location "build"
+
+    <code-comment># Clean up stale PDBs. See <a href="https://www.computerenhance.com/p/msvc-pdbs-are-filled-with-stale-debug" target="_blank">https://www.computerenhance.com/p/msvc-pdbs-are-filled-with-stale-debug</a></code-comment>
+    Remove-Item "*.pdb"
+
+    <code-comment># DEBUG build</code-comment>
+    $time = Measure-Command {
+        cl.exe -D_DEBUG -D_CONSOLE -Od -Fe"$PROGNAME.debug.exe" $clFlags $compileFiles /link $linkFlags /subsystem:console | Out-Default
+    }
+    if ($LastExitCode -ne 0) {
+        throw "Error(s) compiling DEBUG."
+    }
+    Write-Host ("DEBUG took {0:F2}s to compile." -f $time.TotalSeconds)
+
+    <code-comment># RELEASE build</code-comment>
+    $time = Measure-Command {
+        cl.exe -O2 -Fe"$PROGNAME.exe" $clFlags $compileFiles /link $linkFlags /subsystem:windows | Out-Default
+    }
+    if ($LastExitCode -ne 0) {
+        throw "Error(s) compiling RELEASE."
+    }
+    Write-Host ("RELEASE took {0:F2}s to compile." -f $time.TotalSeconds)
+
+    <code-comment># Handle running/debugging</code-comment>
+    if ($debugRun) {
+        &amp; "$debugger" -auto_run "$PROGNAME.debug.exe"
+    }
+    elseif ($step) {
+        &amp; "$debugger" -auto_step "$PROGNAME.debug.exe"
+    }
+    elseif ($run) {
+        &amp; ".\$PROGNAME.exe"
+    }
+
+} finally {
+    Pop-Location
+    Pop-Location
+}
+
+</code>
+
+<p>Call the script like so: <code>build -debugRun arg1 arg2 etc</code></p>
+
+<footer>Notice any errors? Something unclear? <a href="mailto:feedback@alexmason.ca?subject=builds.html">Let me know.</a>
+</footer>
+</body>
+</html>

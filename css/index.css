@@ -1,0 +1,35 @@
+@import url("min.css");
+@import url("main.css");
+
+body {
+  margin: 0 auto;
+  width: 900px;
+}
+
+#back {
+  font-weight: bold;
+  font-size: 20px;
+  margin: 1em 0;
+}
+
+#indextitle {
+  margin: 1em 0;
+}
+
+#indexlist th {
+  font-weight: normal;
+  text-align: left;
+}
+
+#indexlist tr > td {
+  padding: 0.5em 0;
+}
+
+#indexlist {
+  width: 100%;
+  font-size: 14px;
+}
+
+#indexlist .indexcolsize {
+  text-align: right;
+}
