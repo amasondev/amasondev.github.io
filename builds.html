@@ -14,7 +14,6 @@
 <p><code>build.bat</code></p>
 <code id="bat">@echo off
 where /q "cl.exe" || (
-    rem <code-comment>This is so stupid. Like why can't MS just make this a system environment variable...</code-comment>
     call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
 )
 pushd %~dp0
